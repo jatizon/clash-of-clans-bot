@@ -1,27 +1,32 @@
 import logging
-from btree import Status
-from btree import Sequence
-from btree import Action
+from btree import Status, Sequence, Selector, Action, Repeat
 from mouse import Mouse
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 mouse = Mouse()
 
-def click_button(mouse, image_path):
-    mouse_click_status = mouse.click_button(image_path)
-    return Status.SUCCESS if mouse_click_status == Status.SUCCESS else Status.FAILURE
-
-def attack(mouse):
-    return click_button(mouse, "buttons/attack.png")
-
-def open_shop(mouse):
-    return click_button(mouse, "buttons/shop.png")
 
 btree = Sequence([
-    Action(attack, mouse),
-    Action(open_shop, mouse),
-    Action(open_shop, mouse),
+    Action(mouse.click_button, "buttons/home_village/start_attack_1.png"),
+    Action(mouse.click_button, "buttons/home_village/find_match.png"),
+    Action(mouse.click_button, "buttons/home_village/start_attack_2.png"),
+    Repeat(
+        Action(mouse.click_button, "buttons/attacking/barbarian_attack_icon.png"),
+        stop_on_success=True,
+        times=20
+    ),
+    Repeat(
+        Sequence([
+            Action(mouse.deploy_troops),
+            Selector([
+                Action(mouse.check_image_exists, "buttons/home_village/shop.png"),
+                Action(mouse.click_button, "buttons/attacking/return_home.png"),
+            ])
+        ]),
+        stop_on_success=True,
+        times=20
+    )
 ])
 
 btree.run()

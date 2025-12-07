@@ -15,13 +15,14 @@ class Node:
         raise NotImplementedError
 
 class Action(Node):
-    def __init__(self, action_func, *args):
+    def __init__(self, action_func, *args, **kwargs):
         self.action_func = action_func
         self.args = args
+        self.kwargs = kwargs
 
     def run(self):
         logger.info(f"Action: {self.action_func.__name__}")
-        status = self.action_func(*self.args)
+        status = self.action_func(*self.args, **self.kwargs)
         logger.info(f"Action: {self.action_func.__name__} -> {status.name}")
         return status
 
@@ -52,3 +53,29 @@ class Selector(Node):
                 return Status.SUCCESS
         logger.info("Selector -> FAILURE")
         return Status.FAILURE
+    
+class Repeat(Node):
+    def __init__(self, child, times=None, stop_on_failure=False, stop_on_success=False):
+        self.child = child
+        self.times = times
+        self.stop_on_failure = stop_on_failure
+        self.stop_on_success = stop_on_success
+
+    def run(self):
+        logger.info(f"Repeat times={self.times}")
+        count = 0
+        while self.times is None or count < self.times:
+            logger.info(f"Repeat iteration {count + 1}")
+            status = self.child.run()
+            logger.info(f"Repeat iteration {count + 1} -> child status: {status.name}")
+            count += 1
+
+            if status == Status.FAILURE and self.stop_on_failure:
+                logger.info(f"Repeat -> stopping on FAILURE at iteration {count}")
+                return Status.FAILURE
+            if status == Status.SUCCESS and self.stop_on_success:
+                logger.info(f"Repeat -> stopping on SUCCESS at iteration {count}")
+                return Status.SUCCESS
+
+        logger.info(f"Repeat -> completed {count} iterations")
+        return Status.SUCCESS if self.stop_on_success else Status.FAILURE
