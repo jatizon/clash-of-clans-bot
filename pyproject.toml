@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clash-of-clans-bot"
+version = "0.1.0"
+description = "Clash of Clans bot automation"
+requires-python = ">=3.8"
+dependencies = [
+    "pyautogui",
+    "opencv-python",
+    "numpy",
+    "mss",
+    "python-dotenv",
+    "coc.py",
+    "Pillow",
+    "pyclick",
+]
+
+[tool.setuptools]
+packages = ["clash_of_clans_bot"]
+
+[tool.setuptools.package-data]
+"*" = ["*.py"]
+

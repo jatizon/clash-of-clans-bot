@@ -1,0 +1,14 @@
+pyproject.toml
+clash_of_clans_bot/__init__.py
+clash_of_clans_bot/bot_logic.py
+clash_of_clans_bot/bot_main.py
+clash_of_clans_bot/btree.py
+clash_of_clans_bot/coc_api.py
+clash_of_clans_bot/coc_api_test.py
+clash_of_clans_bot/mouse.py
+clash_of_clans_bot/test.py
+clash_of_clans_bot.egg-info/PKG-INFO
+clash_of_clans_bot.egg-info/SOURCES.txt
+clash_of_clans_bot.egg-info/dependency_links.txt
+clash_of_clans_bot.egg-info/requires.txt
+clash_of_clans_bot.egg-info/top_level.txt

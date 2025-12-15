@@ -1,0 +1,8 @@
+pyautogui
+opencv-python
+numpy
+mss
+python-dotenv
+coc.py
+Pillow
+pyclick

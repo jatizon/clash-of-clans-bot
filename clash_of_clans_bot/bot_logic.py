@@ -1,10 +1,16 @@
 import logging
-from btree import Status, Sequence, Selector, Action, Repeat
-from mouse import Mouse
+from clash_of_clans_bot.bot_logic.nodes.status import Status
+from clash_of_clans_bot.bot_logic.nodes.sequence import Sequence
+from clash_of_clans_bot.bot_logic.nodes.selector import Selector
+from clash_of_clans_bot.bot_logic.nodes.action import Action
+from clash_of_clans_bot.bot_logic.nodes.repeat import Repeat
+from clash_of_clans_bot.mouse import MouseWrapper
+from pyclick import HumanClicker
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
-mouse = Mouse()
+human_clicker = HumanClicker()
+mouse = MouseWrapper(human_clicker)
 
 
 btree = Sequence([
