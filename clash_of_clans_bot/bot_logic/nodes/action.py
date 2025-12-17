@@ -4,6 +4,7 @@ from clash_of_clans_bot.bot_logic.nodes.status import Status
 
 logger = logging.getLogger(__name__)
 
+
 class Action(Node):
     def __init__(self, action_func, *args, **kwargs):
         self.action_func = action_func
@@ -19,13 +20,7 @@ class Action(Node):
         else:
             logger.info(f"{indent_str}Action: {self.action_func.__name__}()")
         
-        result = self.action_func(*self.args, **self.kwargs)
-        
-        # If the function returns a Status, use it. Otherwise, default to SUCCESS
-        if isinstance(result, Status):
-            status = result
-        else:
-            status = Status.SUCCESS
+        status = self.action_func(*self.args, **self.kwargs)
         
         logger.info(f"{indent_str}  └─ {self.action_func.__name__} -> {status.name}")
         return status

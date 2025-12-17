@@ -10,7 +10,9 @@ class Repeat(Node):
         self.times = times
         self.stop_on_failure = stop_on_failure
         self.stop_on_success = stop_on_success
-
+        self._current_iteration = 0  # State: current iteration count
+        self._child_running = False  # State: whether child is currently running
+    
     def run(self, indent=0):
         indent_str = self._indent(indent)
         stop_info = []
@@ -19,21 +21,43 @@ class Repeat(Node):
         if self.stop_on_success:
             stop_info.append("stop_on_success=True")
         stop_str = f", {', '.join(stop_info)}" if stop_info else ""
-        logger.info(f"{indent_str}Repeat (times={self.times}{stop_str})")
-        count = 0
-        while self.times is None or count < self.times:
-            logger.info(f"{indent_str}  └─ Iteration {count + 1}")
+        state_info = f"state: iteration {self._current_iteration + 1}" if self._child_running else f"state: iteration {self._current_iteration + 1} (fresh)"
+        logger.info(f"{indent_str}Repeat (times={self.times}{stop_str}, {state_info})")
+        
+        # Continue iterations until limit or stop condition
+        while self.times is None or self._current_iteration < self.times:
+            # If child was running, continue from same iteration
+            if not self._child_running:
+                self._current_iteration += 1
+            
+            logger.info(f"{indent_str}  └─ Iteration {self._current_iteration}")
             status = self.child.run(indent + 2)
-            logger.info(f"{indent_str}  └─ Iteration {count + 1} -> {status.name}")
-            count += 1
-
+            logger.info(f"{indent_str}  └─ Iteration {self._current_iteration} -> {status.name}")
+            
+            if status == Status.RUNNING:
+                self._child_running = True  # Save state: child is running
+                logger.info(f"{indent_str}Repeat -> RUNNING (child is running at iteration {self._current_iteration}, state saved)")
+                return Status.RUNNING
+            
+            # Child completed (SUCCESS or FAILURE)
+            self._child_running = False  # Reset child running state
+            
             if status == Status.FAILURE and self.stop_on_failure:
-                logger.info(f"{indent_str}Repeat -> FAILURE (stopped at iteration {count})")
+                self._current_iteration = 0  # Reset state
+                logger.info(f"{indent_str}Repeat -> FAILURE (stopped at iteration {self._current_iteration}, state reset)")
                 return Status.FAILURE
+            
             if status == Status.SUCCESS and self.stop_on_success:
-                logger.info(f"{indent_str}Repeat -> SUCCESS (stopped at iteration {count})")
+                self._current_iteration = 0  # Reset state
+                logger.info(f"{indent_str}Repeat -> SUCCESS (stopped at iteration {self._current_iteration}, state reset)")
                 return Status.SUCCESS
-
-        logger.info(f"{indent_str}Repeat -> SUCCESS (completed {count} iterations)")
+            
+            # Continue to next iteration if not stopped
+        
+        # Completed all iterations - reset state
+        completed = self._current_iteration
+        self._current_iteration = 0
+        self._child_running = False
+        logger.info(f"{indent_str}Repeat -> SUCCESS (completed {completed} iterations, state reset)")
         return Status.SUCCESS
 
