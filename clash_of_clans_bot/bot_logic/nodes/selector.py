@@ -1,6 +1,6 @@
 import logging
 from clash_of_clans_bot.bot_logic.nodes.node import Node
-from clash_of_clans_bot.bot_logic.nodes.status import Status
+from clash_of_clans_bot.bot_logic.enums.status_enum import StatusEnum as Status
 
 logger = logging.getLogger(__name__)
 
@@ -9,7 +9,7 @@ class Selector(Node):
         self.children = children
         self._running_child_index = None  # State: which child is currently running
     
-    def run(self, indent=0):
+    def tick(self, indent=0):
         indent_str = self._indent(indent)
         state_info = f"state: child {self._running_child_index + 1} running" if self._running_child_index is not None else "state: fresh"
         logger.info(f"{indent_str}Selector ({len(self.children)} children, {state_info})")
@@ -20,7 +20,7 @@ class Selector(Node):
         for i in range(start_index, len(self.children)):
             child = self.children[i]
             logger.info(f"{indent_str}  └─ Executing child {i+1}/{len(self.children)}")
-            status = child.run(indent + 1)
+            status = child.tick(indent + 1)
             
             if status == Status.SUCCESS:
                 # Reset state on success

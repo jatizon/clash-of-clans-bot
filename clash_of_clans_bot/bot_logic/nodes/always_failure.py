@@ -1,6 +1,6 @@
 import logging
 from clash_of_clans_bot.bot_logic.nodes.node import Node
-from clash_of_clans_bot.bot_logic.nodes.status import Status
+from clash_of_clans_bot.bot_logic.enums.status_enum import StatusEnum as Status
 
 logger = logging.getLogger(__name__)
 
@@ -9,7 +9,7 @@ class AlwaysFailure(Node):
         self.child = child
         self._child_running = False  # State: whether child is currently running
     
-    def run(self, indent=0):
+    def tick(self, indent=0):
         indent_str = self._indent(indent)
         state_info = "state: child running" if self._child_running else "state: fresh"
         logger.info(f"{indent_str}AlwaysFailure ({state_info})")
@@ -19,7 +19,7 @@ class AlwaysFailure(Node):
         else:
             logger.info(f"{indent_str}  └─ Executing child")
         
-        status = self.child.run(indent + 1)  # Execute child but ignore its result
+        status = self.child.tick(indent + 1)  # Execute child but ignore its result
         logger.info(f"{indent_str}  └─ Child -> {status.name} (ignored)")
         
         if status == Status.RUNNING:

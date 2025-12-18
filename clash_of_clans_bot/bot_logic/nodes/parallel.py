@@ -1,6 +1,6 @@
 import logging
 from clash_of_clans_bot.bot_logic.nodes.node import Node
-from clash_of_clans_bot.bot_logic.nodes.status import Status
+from clash_of_clans_bot.bot_logic.enums.status_enum import StatusEnum as Status
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ class Parallel(Node):
         self.policy = policy
         self._child_results = None  # State: results from previous tick (None = fresh start)
     
-    def run(self, indent=0):
+    def tick(self, indent=0):
         indent_str = self._indent(indent)
         state_info = "state: resuming" if self._child_results is not None else "state: fresh"
         logger.info(f"{indent_str}Parallel (policy={self.policy}, {len(self.children)} children, {state_info})")
@@ -32,7 +32,7 @@ class Parallel(Node):
             else:
                 logger.info(f"{indent_str}  └─ Executing child {i+1}/{len(self.children)}")
             
-            status = child.run(indent + 1)
+            status = child.tick(indent + 1)
             self._child_results[i] = status
             logger.info(f"{indent_str}  └─ Child {i+1} -> {status.name}")
         

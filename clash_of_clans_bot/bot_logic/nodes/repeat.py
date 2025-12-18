@@ -1,6 +1,6 @@
 import logging
 from clash_of_clans_bot.bot_logic.nodes.node import Node
-from clash_of_clans_bot.bot_logic.nodes.status import Status
+from clash_of_clans_bot.bot_logic.enums.status_enum import StatusEnum as Status
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,7 @@ class Repeat(Node):
         self._current_iteration = 0  # State: current iteration count
         self._child_running = False  # State: whether child is currently running
     
-    def run(self, indent=0):
+    def tick(self, indent=0):
         indent_str = self._indent(indent)
         stop_info = []
         if self.stop_on_failure:
@@ -31,7 +31,7 @@ class Repeat(Node):
                 self._current_iteration += 1
             
             logger.info(f"{indent_str}  └─ Iteration {self._current_iteration}")
-            status = self.child.run(indent + 2)
+            status = self.child.tick(indent + 2)
             logger.info(f"{indent_str}  └─ Iteration {self._current_iteration} -> {status.name}")
             
             if status == Status.RUNNING:

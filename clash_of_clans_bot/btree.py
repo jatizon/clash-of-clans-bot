@@ -11,7 +11,7 @@ class Status(Enum):
 
 
 class Node:
-    def run(self):
+    def tick(self):
         raise NotImplementedError
 
 class Action(Node):
@@ -20,7 +20,7 @@ class Action(Node):
         self.args = args
         self.kwargs = kwargs
 
-    def run(self):
+    def tick(self):
         logger.info(f"Action: {self.action_func.__name__}")
         status = self.action_func(*self.args, **self.kwargs)
         logger.info(f"Action: {self.action_func.__name__} -> {status.name}")
@@ -30,10 +30,10 @@ class Sequence(Node):
     def __init__(self, children):
         self.children = children
 
-    def run(self):
+    def tick(self):
         logger.info("Sequence")
         for child in self.children:
-            status = child.run()
+            status = child.tick()
             if status != Status.SUCCESS:
                 logger.info(f"Sequence -> {status.name}")
                 return status
@@ -44,10 +44,10 @@ class Selector(Node):
     def __init__(self, children):
         self.children = children
 
-    def run(self):
+    def tick(self):
         logger.info("Selector")
         for child in self.children:
-            status = child.run()
+            status = child.tick()
             if status == Status.SUCCESS:
                 logger.info("Selector -> SUCCESS")
                 return Status.SUCCESS
@@ -61,12 +61,12 @@ class Repeat(Node):
         self.stop_on_failure = stop_on_failure
         self.stop_on_success = stop_on_success
 
-    def run(self):
+    def tick(self):
         logger.info(f"Repeat times={self.times}")
         count = 0
         while self.times is None or count < self.times:
             logger.info(f"Repeat iteration {count + 1}")
-            status = self.child.run()
+            status = self.child.tick()
             logger.info(f"Repeat iteration {count + 1} -> child status: {status.name}")
             count += 1
 

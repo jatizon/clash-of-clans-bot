@@ -1,6 +1,6 @@
 import logging
 from clash_of_clans_bot.bot_logic.nodes.node import Node
-from clash_of_clans_bot.bot_logic.nodes.status import Status
+from clash_of_clans_bot.bot_logic.enums.status_enum import StatusEnum as Status
 
 logger = logging.getLogger(__name__)
 
@@ -9,7 +9,7 @@ class Inverter(Node):
         self.child = child
         self._child_running = False  # State: whether child is currently running
     
-    def run(self, indent=0):
+    def tick(self, indent=0):
         indent_str = self._indent(indent)
         state_info = "state: child running" if self._child_running else "state: fresh"
         logger.info(f"{indent_str}Inverter ({state_info})")
@@ -19,7 +19,7 @@ class Inverter(Node):
         else:
             logger.info(f"{indent_str}  └─ Executing child")
         
-        status = self.child.run(indent + 1)
+        status = self.child.tick(indent + 1)
         logger.info(f"{indent_str}  └─ Child -> {status.name}")
         
         if status == Status.SUCCESS:

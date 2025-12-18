@@ -1,4 +1,4 @@
-from clash_of_clans_bot.bot_logic.nodes.status import Status
+from clash_of_clans_bot.bot_logic.enums.status_enum import StatusEnum as Status
 from clash_of_clans_bot.bot_logic.nodes.node import Node
 from clash_of_clans_bot.bot_logic.nodes.action import Action
 from clash_of_clans_bot.bot_logic.nodes.sequence import Sequence

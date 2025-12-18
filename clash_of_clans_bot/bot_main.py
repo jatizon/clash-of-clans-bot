@@ -13,4 +13,6 @@ mouse = Mouse(human_clicker)
 vision = Vision(images_path="clash_of_clans_bot")
 controller = MainController(mouse, vision)
 
-BotLogicBehaviorTree(controller).run()
+while True:
+    controller.state_controller.on_tick()
+    BotLogicBehaviorTree(controller).tick()

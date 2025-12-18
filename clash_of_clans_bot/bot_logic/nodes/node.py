@@ -1,5 +1,5 @@
 class Node:
-    def run(self, indent=0):
+    def tick(self, indent=0):
         raise NotImplementedError
     
     def _indent(self, level):

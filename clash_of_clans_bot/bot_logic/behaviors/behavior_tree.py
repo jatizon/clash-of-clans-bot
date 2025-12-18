@@ -8,14 +8,12 @@ from clash_of_clans_bot.bot_logic.behaviors.homevillage.homevillage_main import 
 
 def BotLogicBehaviorTree(controller):
     return (
-        Repeat(
-            Selector([
-                Action(controller.ui.click_button, "images/buttons/common/reopen_game.png"),
-                Parallel([
-                    HomeVillageBehavior(controller),
-                    AttackBehavior(controller)
-                ],
-                policy='Sequence')
-            ]),
-        )
+        Selector([
+            Action(controller.ui.click_button, "images/buttons/common/reopen_game.png"),
+            Parallel([
+                HomeVillageBehavior(controller),
+                # AttackBehavior(controller)
+            ],
+            policy='Sequence')
+        ])
     )
