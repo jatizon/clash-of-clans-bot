@@ -1,8 +1,6 @@
 import os
 import pyautogui
 import random
-import numpy as np
-from easyocr import Reader
 
 
 class Vision:
@@ -23,3 +21,7 @@ class Vision:
     def random_point(self):
         screen_width, screen_height = pyautogui.size()
         return random.randint(0, screen_width), random.randint(0, screen_height)
+
+
+# a=Vision()
+# print(a.is_image_on_screen("clash_of_clans_bot/images/home_village/other/no_builder.png"))
