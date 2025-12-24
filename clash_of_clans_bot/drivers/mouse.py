@@ -1,5 +1,6 @@
 import pyautogui
-from clash_of_clans_bot.enums.status_enum import StatusEnum as Status
+from clash_of_clans_bot.enums.status_enum import Status
+import time
 
 
 class Mouse:
@@ -34,17 +35,24 @@ class Mouse:
     def click(self):
         pyautogui.click()
 
+    def safe_click(self):
+        self.click()
+        time.sleep(0.5)
+
     def right_click(self):
         pyautogui.rightClick()
 
     def double_click(self):
         pyautogui.doubleClick()
 
+    def scroll(self, dy):
+        pyautogui.scroll(dy)
+
     def zoom_out(self):
         # For some reason, just scrolling 1000
         # doesn't work, so we scroll 100 10 times
-        for _ in range(10):
-            pyautogui.scroll(-100)
+        for _ in range(50):
+            self.scroll(-100)
             
     def center_screen(self):
         self.zoom_out()
@@ -53,8 +61,4 @@ class Mouse:
         screen_width, screen_height = pyautogui.size()
         self.drag_screen(int(0.3*screen_width), int(0.3*screen_height))
         self.drag_screen(-int(0.1*screen_width), -int(0.05*screen_height))
-
-    def adjust_screen(self):
-        self.zoom_out()
-        self.center_screen()
-        return Status.SUCCESS
+        time.sleep(0.5)

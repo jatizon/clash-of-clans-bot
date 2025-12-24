@@ -1,6 +1,7 @@
 import logging
+
+from clash_of_clans_bot.enums.status_enum import Status
 from clash_of_clans_bot.nodes.node import Node
-from clash_of_clans_bot.enums.status_enum import StatusEnum as Status
 
 logger = logging.getLogger(__name__)
 
@@ -16,16 +17,12 @@ class Action(Node):
             path = []
         
         args_kwargs = self._format_args_kwargs(self.args, self.kwargs)
-        action_name = f"Act({self.action_func.__name__}"
+        action_name = self.action_func.__name__
         if args_kwargs:
-            action_name += f", {args_kwargs}"
-        action_name += ")"
-        
-        full_path = path + [action_name]
-        path_str = self._format_path(full_path)
+            action_name += f"({args_kwargs})"
         
         status = self.action_func(*self.args, **self.kwargs)
         
-        logger.info(f"{path_str} -> {status.name}")
+        logger.info(f"{action_name} -> {status.name}")
         return status
 

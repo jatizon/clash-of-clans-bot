@@ -1,6 +1,7 @@
 import logging
+
+from clash_of_clans_bot.enums.status_enum import Status
 from clash_of_clans_bot.nodes.node import Node
-from clash_of_clans_bot.enums.status_enum import StatusEnum as Status
 
 logger = logging.getLogger(__name__)
 

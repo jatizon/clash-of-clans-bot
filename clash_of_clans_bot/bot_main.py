@@ -1,9 +1,10 @@
 import logging
-from clash_of_clans_bot.behaviors.home_village_main import BotLogicBehaviorTree
+from pyclick import HumanClicker
+
+from clash_of_clans_bot.behaviors.main_behavior import BotLogicBehaviorTree
+from clash_of_clans_bot.context.context import Context
 from clash_of_clans_bot.drivers.mouse import Mouse
 from clash_of_clans_bot.drivers.vision import Vision
-from clash_of_clans_bot.context.context import Context
-from pyclick import HumanClicker
 
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
