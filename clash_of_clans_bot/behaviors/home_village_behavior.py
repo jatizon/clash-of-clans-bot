@@ -2,6 +2,7 @@ from clash_of_clans_bot.nodes.action import Action
 from clash_of_clans_bot.nodes.selector import Selector
 from clash_of_clans_bot.nodes.sequence import Sequence
 from clash_of_clans_bot.nodes.always_success import AlwaysSuccess
+from clash_of_clans_bot.nodes.repeat import Repeat
 
 
 def HomeVillageBehavior(ctx):
@@ -28,11 +29,6 @@ def HomeVillageBehavior(ctx):
                     ]),
                 ]),
                 Sequence([
-                    Action(ctx.intention.is_set, "USE_BUILDER"),
-                    Action(ctx.home_village_controller.choose_suggested_upgrade),
-                    Action(ctx.intention.discard)
-                ]),
-                Sequence([
                     Action(ctx.home_village_controller.check_has_achievements),
                     Action(ctx.intention.set, "CLAIM_ACHIEVEMENT_REWARDS"),
                     Action(ctx.home_village_controller.open_profile)
@@ -43,8 +39,15 @@ def HomeVillageBehavior(ctx):
                 ]),
                 Sequence([
                     Action(ctx.home_village_controller.check_has_builder),
-                    Action(ctx.intention.set, "USE_BUILDER"),
-                    Action(ctx.home_village_controller.open_suggested_upgrades)
+                    Action(ctx.home_village_controller.choose_builder_upgrade),
+                ]),
+                Sequence([
+                    Action(ctx.home_village_controller.check_has_lab),
+                    Action(ctx.home_village_controller.choose_lab_upgrade),
+                ]),
+                Sequence([
+                    Action(ctx.home_village_controller.has_obstacles),
+                    Action(ctx.home_village_controller.remove_obstacle)
                 ]),
                 Action(ctx.home_village_controller.start_attack),
             ])

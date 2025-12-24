@@ -49,5 +49,18 @@ class Vision:
         end = (1+percentage_of_screen)/2
         return random.randint(int(screen_width*start), int(screen_width*end)), random.randint(int(screen_height*start), int(screen_height*end))
 
-a = Vision()
-print(a.is_image_on_screen("clash_of_clans_bot/images/profile/other/claim_reward.png", grayscale=False))
+    def get_point_matrix(self, percentage_of_screen=0.70, step=60):
+        screen_width, screen_height = pyautogui.size()
+        start = (1-percentage_of_screen)/2
+        end = (1+percentage_of_screen)/2
+
+        points = []
+        reverse = False
+
+        for y in range(int(screen_height*start), int(screen_height*end), step):
+            x = range(int(screen_width*start), int(screen_width*end), step)
+            if reverse:
+                x = reversed(x)
+            points.extend([(x_value, y) for x_value in x])
+            reverse = not reverse
+        return points

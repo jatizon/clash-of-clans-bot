@@ -62,3 +62,5 @@ class Mouse:
         self.drag_screen(int(0.3*screen_width), int(0.3*screen_height))
         self.drag_screen(-int(0.1*screen_width), -int(0.05*screen_height))
         time.sleep(0.5)
+
+    
