@@ -1,7 +1,8 @@
 import asyncio
+import os
+
 import coc
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 

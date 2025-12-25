@@ -497,7 +497,7 @@ Valida a tela atual (implementação pendente).
 3. Cria ScreenDetector com caminho das imagens
 4. Cria Controller com MouseWrapper e ScreenDetector
 5. Cria BotLogicBehaviorTree com Controller
-6. Executa BotLogicBehaviorTree.run()
+6. Executa BotLogicBehaviorTree.tick()
 ```
 
 ### 2. Execução da Behavior Tree
